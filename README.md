@@ -5,6 +5,10 @@ Branch    | Build Status
 `master`  | [![Build Status](https://openwsn-builder.paris.inria.fr/buildStatus/icon?job=6TiSCH%20Simulator/master)](https://openwsn-builder.paris.inria.fr/job/6TiSCH%20Simulator/job/master/)
 `develop` | [![Build Status](https://openwsn-builder.paris.inria.fr/buildStatus/icon?job=6TiSCH%20Simulator/develop)](https://openwsn-builder.paris.inria.fr/job/6TiSCH%20Simulator/job/develop/)
 
+Dealing with Mibehaving Nodes in Secure Internet of Things Networks:
+
+I try to implement my proposed approaches in the context of my thesis.
+ 
 Core Developers:
 
 * Yasuyuki Tanaka (yasuyuki.tanaka@inria.fr)
