@@ -905,6 +905,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         # for quick access
         proposed_cells = request[u'app'][u'cellList']
+        print("Nbr proposed cells: " + str(len(proposed_cells)))
         peerMac         = request[u'mac'][u'srcMac']
 
         # find available cells in the received CellList

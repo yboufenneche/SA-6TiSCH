@@ -7,7 +7,7 @@ Branch    | Build Status
 
 Dealing with Mibehaving Nodes in Secure Internet of Things Networks:
 
-I try to implement my proposed approaches in the context of my thesis.
+I try to implement my proposed approaches in the context of my thesis. I start with the paper aforementioned.
  
 Core Developers:
 
