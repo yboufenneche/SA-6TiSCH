@@ -938,9 +938,9 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 request[u'app'][u'numCells']
             )
 
-        cl = cell_list
+        cl = list(cell_list)
         print ("## Cell list before removing some cells = " + str(cl))
-        self._reduceCells(cl,0)
+        self._reduceCells(cl,2)
         print ("## Cell list after removing some cells = " + str(cl))
 
         # prepare callback
@@ -1415,9 +1415,8 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
     # Make the node selfish by removing n cells from cell_list
     def _reduceCells(self, cell_list, n):
-        if len(cell_list) <=n:
-            for x in cell_list:
+        for i in range(n):
+            if len(cell_list) > 0:
                 cell_list.pop()
-        else:
-            for x in range(n):
-                cell_list.pop()
+            else:
+                break
