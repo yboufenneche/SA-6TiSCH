@@ -12,6 +12,7 @@ import netaddr
 import SimEngine
 from . import MoteDefines as d
 from . import sixp
+from SelfishnessDetector.fuzzySelfishnessEstimator import compute_selfishness
 
 # =========================== defines =========================================
 
@@ -548,11 +549,12 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         if cell_opt == self.TX_CELL_OPT:
             if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization:
+                print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "self.tx_cell_utilization = " + str(self.tx_cell_utilization))
                 # add one TX cell
                 self.retry_count[neighbor] = 0
                 self._request_adding_cells(
                     neighbor     = neighbor,
-                    num_tx_cells = 1
+                    num_tx_cells = 3
                 )
 
             elif self.tx_cell_utilization < d.MSF_LIM_NUMCELLSUSED_LOW:
@@ -905,7 +907,9 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         # for quick access
         proposed_cells = request[u'app'][u'cellList']
-        print("Nbr proposed cells: " + str(len(proposed_cells)))
+        #print("## Request.app: "+ str(request[u'app']) +" ----- Request.app.cellList "+ str(request[u'app'][u'cellList']))
+        print("## Nbr proposed cells: " + str(len(proposed_cells)))
+        print("## Selfishness = " + str(compute_selfishness(0.36,0.7)))
         peerMac         = request[u'mac'][u'srcMac']
 
         # find available cells in the received CellList
@@ -917,11 +921,15 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 set(self._get_available_slots())
             )
         )
+        print("## Slots in cellList: " + str(slots_in_cell_list))
+        print("## Available slots: " + str(available_slots))
+
 
         # prepare cell_list
         candidate_cells = [
             c for c in proposed_cells if c[u'slotOffset'] in available_slots
         ]
+        print("## numCells: " + str(request[u'app'][u'numCells']))
         if len(candidate_cells) < request[u'app'][u'numCells']:
             cell_list = candidate_cells
         else:
@@ -929,6 +937,11 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 candidate_cells,
                 request[u'app'][u'numCells']
             )
+
+        cl = cell_list
+        print ("## Cell list before removing some cells = " + str(cl))
+        self._reduceCells(cl,0)
+        print ("## Cell list after removing some cells = " + str(cl))
 
         # prepare callback
         if len(available_slots) > 0:
@@ -1399,3 +1412,12 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         # assuming T (table size) is 16-bit
         return hash_value & 0xFFFF
+
+    # Make the node selfish by removing n cells from cell_list
+    def _reduceCells(self, cell_list, n):
+        if len(cell_list) <=n:
+            for x in cell_list:
+                cell_list.pop()
+        else:
+            for x in range(n):
+                cell_list.pop()
