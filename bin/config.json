@@ -1,4 +1,7 @@
 {
+    "selfishness":{
+        "numSelfCells":                                    2
+    },
     "version":                                             0,
     "execution": {
         "numCPUs":                                         1,

@@ -12,6 +12,7 @@ import netaddr
 import SimEngine
 from . import MoteDefines as d
 from . import sixp
+import json
 from SelfishnessDetector.fuzzySelfishnessEstimator import compute_selfishness
 
 # =========================== defines =========================================
@@ -139,7 +140,6 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
     RX_CELL_OPT   = [d.CELLOPTION_RX]
     NUM_INITIAL_NEGOTIATED_TX_CELLS = 1
     NUM_INITIAL_NEGOTIATED_RX_CELLS = 0
-
     def __init__(self, mote):
         # initialize parent class
         super(SchedulingFunctionMSF, self).__init__(mote)
@@ -153,6 +153,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         self.rx_cell_utilization  = 0
         self.locked_slots         = set([]) # slots in on-going ADD transactions
         self.retry_count          = {}      # indexed by MAC address
+
 
     # ======================= public ==========================================
 
@@ -939,7 +940,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             )
 
         print ("## Cell list before removing some cells = " + str(cell_list))
-        self._reduceCells(cell_list,2)
+        self._reduceCells(cell_list, self._numSelfCells())
         print ("## Cell list after removing some cells = " + str(cell_list))
 
         # prepare callback
@@ -1422,3 +1423,12 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 cell_list.pop()
             else:
                 break
+
+    """
+    # Get the number of cells to remove from the file config.json
+    """
+    def _numSelfCells(self):
+        with open('config.json') as conf:
+            dat = json.load(conf)
+
+        return dat["selfishness"]["numSelfCells"]
