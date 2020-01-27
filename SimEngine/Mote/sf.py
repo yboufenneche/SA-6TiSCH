@@ -549,7 +549,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         if cell_opt == self.TX_CELL_OPT:
             if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization:
-                print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "self.tx_cell_utilization = " + str(self.tx_cell_utilization))
+                print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
                 # add one TX cell
                 self.retry_count[neighbor] = 0
                 self._request_adding_cells(
@@ -909,7 +909,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         proposed_cells = request[u'app'][u'cellList']
         #print("## Request.app: "+ str(request[u'app']) +" ----- Request.app.cellList "+ str(request[u'app'][u'cellList']))
         print("## Nbr proposed cells: " + str(len(proposed_cells)))
-        print("## Selfishness = " + str(compute_selfishness(0.36,0.7)))
+        #print("## Selfishness = " + str(compute_selfishness(0.36,0.7)))
         peerMac         = request[u'mac'][u'srcMac']
 
         # find available cells in the received CellList
@@ -938,10 +938,9 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 request[u'app'][u'numCells']
             )
 
-        cl = list(cell_list)
-        print ("## Cell list before removing some cells = " + str(cl))
-        self._reduceCells(cl,2)
-        print ("## Cell list after removing some cells = " + str(cl))
+        print ("## Cell list before removing some cells = " + str(cell_list))
+        self._reduceCells(cell_list,2)
+        print ("## Cell list after removing some cells = " + str(cell_list))
 
         # prepare callback
         if len(available_slots) > 0:
@@ -1413,10 +1412,13 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         # assuming T (table size) is 16-bit
         return hash_value & 0xFFFF
 
-    # Make the node selfish by removing n cells from cell_list
+    """
+    # Make the node selfish by removing n cells from cell_list.
+    # cell_list should contain at least one (01) cell after removing cells to avoid a SIXP_RC_ERR
+    """
     def _reduceCells(self, cell_list, n):
         for i in range(n):
-            if len(cell_list) > 0:
+            if len(cell_list) > 1:
                 cell_list.pop()
             else:
                 break
