@@ -939,9 +939,9 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 request[u'app'][u'numCells']
             )
 
-        print ("## Cell list before removing some cells = " + str(cell_list))
+        print ("## Cell list before trying to remove " + str(self._numSelfCells()) + " cell(s) : " + str(cell_list))
         self._reduceCells(cell_list, self._numSelfCells())
-        print ("## Cell list after removing some cells = " + str(cell_list))
+        print ("## Cell list after trying to remove " + str(self._numSelfCells()) + " cell(s) : " + str(cell_list))
 
         # prepare callback
         if len(available_slots) > 0:
