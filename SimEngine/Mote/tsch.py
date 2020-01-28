@@ -19,6 +19,7 @@ import netaddr
 # Mote sub-modules
 from . import MoteDefines as d
 from SimEngine.Mote.sf import SchedulingFunctionMSF
+from SimEngine.Mote.sf import SchedulingFunctionSMSF
 
 # Simulator-wide modules
 import SimEngine
@@ -449,7 +450,7 @@ class Tsch(object):
                 and
                 packet[u'mac'][u'dstMac'] != d.BROADCAST_ADDRESS
                 and
-                isinstance(self.mote.sf, SchedulingFunctionMSF)
+                isinstance(self.mote.sf, SchedulingFunctionSMSF)
                 and
                 not self.mote.sf.get_tx_cells(packet[u'mac'][u'dstMac'])
             ):
@@ -470,7 +471,7 @@ class Tsch(object):
         if (
                 packet[u'mac'][u'dstMac'] != d.BROADCAST_ADDRESS
                 and
-                isinstance(self.mote.sf, SchedulingFunctionMSF)
+                isinstance(self.mote.sf, SchedulingFunctionSMSF)
                 and
                 not [
                     _pkt for _pkt in self.txQueue
