@@ -20,7 +20,6 @@ import SimEngine.Mote.MoteDefines as d
 from SimEngine import SimLog
 from SimEngine import SimEngine
 from SimEngine.Mote.sf import SchedulingFunctionMSF
-from SimEngine.Mote.sf import SchedulingFunctionSMSF
 from SimEngine.Mote.sf import SchedulingFunctionSFNone
 
 # =========================== helpers =========================================
@@ -277,7 +276,7 @@ class TestMSF(object):
         cells = [
             cell for cell in  mote.tsch.get_cells(
                 mac_addr         = root.get_mac_addr(),
-                slotframe_handle = SchedulingFunctionSMSF.SLOTFRAME_HANDLE_NEGOTIATED_CELLS
+                slotframe_handle = SchedulingFunctionMSF.SLOTFRAME_HANDLE_NEGOTIATED_CELLS
             )
             if cell.options == [d.CELLOPTION_TX]
         ]
@@ -643,7 +642,7 @@ class TestMSF(object):
         )
         assert (
                 len([log for log in logs if log['_mote_id']==mote.id]) ==
-                SchedulingFunctionSMSF.MAX_RETRY + 1
+                SchedulingFunctionMSF.MAX_RETRY + 1
         )
 
         # mote should lose its parent
