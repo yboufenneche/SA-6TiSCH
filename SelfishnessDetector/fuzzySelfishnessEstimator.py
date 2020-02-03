@@ -9,6 +9,8 @@ def compute_selfishness(pr_value, rsr_value):
     """
     pr = ctrl.Antecedent(np.arange(0, 1, 0.001), 'pr')
     rsr = ctrl.Antecedent(np.arange(0, 1, 0.001), 'rsr')
+    distance = ctrl.Antecedent(np.arange(0, 10, 1), 'distange')
+    energy = ctrl.Antecedent(np.arange(0, 100, 1), 'energy')
     selfishness = ctrl.Consequent(np.arange(0, 1, 0.001), 'selfishness')
 
     """
@@ -21,6 +23,14 @@ def compute_selfishness(pr_value, rsr_value):
     rsr['lowRsr'] = fuzz.trapmf(rsr.universe, [0, 0, 0.25, 0.5])
     rsr['mediumRsr'] = fuzz.trimf(rsr.universe, [0.25, 0.5, 0.75])
     rsr['highRsr'] = fuzz.trapmf(rsr.universe, [0.5, 0.75, 1, 1])
+
+    distance['near'] = fuzz.trapmf(distance.universe, [0, 0, 2, 4])
+    distance['far'] = fuzz.trapmf(distance.universe, [2, 4, 10, 10])
+
+    energy['crEner'] = fuzz.trapmf(energy.universe, [0, 0, 15, 25])
+    energy['lowEner'] = fuzz.trimf(energy.universe, [15, 30, 45])
+    energy['mediumEner'] = fuzz.trimf(energy.universe, [35, 50, 65])
+    energy['highEner'] = fuzz.trapmf(energy.universe, [55, 70, 100, 100])
 
     selfishness['lowSelfishness'] = fuzz.trapmf(selfishness.universe, [0, 0, 0.333, 0.666])
     selfishness['highSelfishness'] = fuzz.trapmf(selfishness.universe, [0.333, 0.666, 1, 1])
@@ -39,7 +49,9 @@ def compute_selfishness(pr_value, rsr_value):
     rule8 = ctrl.Rule(pr['highPr'] & rsr['mediumRsr'], selfishness['lowSelfishness'])
     rule9 = ctrl.Rule(pr['highPr'] & rsr['highRsr'], selfishness['lowSelfishness'])
 
-    # Control System Creation and Simulation
+    """
+    Control System Creation and Simulation
+    """
 
     selfishness_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9])
     selfEngine = ctrl.ControlSystemSimulation(selfishness_ctrl)
