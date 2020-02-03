@@ -6,6 +6,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 # ========================== imports =========================================
+from idlelib.idle_test.test_text import MockTextTest
 
 from builtins import zip
 from builtins import str
@@ -21,11 +22,15 @@ import time
 import traceback
 import json
 
+import wx
+
 from . import Mote
 from . import SimSettings
 from . import SimLog
 from . import Connectivity
 from . import SimConfig
+
+from . import MotesPositions
 
 # =========================== defines =========================================
 
@@ -429,8 +434,29 @@ class SimEngine(DiscreteEventEngine):
         self.motes[self.DAGROOT_ID].setDagRoot()
 
         # boot all motes
+        # and set their positions
+
+        # We start by creating a list of motes' IDs
+        motesIds = []
+        for i in range(len(self.motes)):
+            motesIds.append (self.motes[i].id)
+
+        # Create a list of locations
+        ml = MotesPositions.motesLocations(motesIds)
+
+        # Write positions in file "positions.json"
+        with open('positions.json', 'w') as json_file:
+            json.dump(ml, json_file)
+
+        # Boot motes and set their positions
         for i in range(len(self.motes)):
             self.motes[i].boot()
+            self.motes[i].setLocation(ml[i][0], ml[i][1])
+            print("Mote {0}: ID = ".format(i) + str(self.motes[i].id) + " --> Position: "+ str(self.motes[i].getLocation()))
+
+        # Show motes' positions in a frame
+        motesPositions = MotesPositions.FrameThread()
+        motesPositions.start()
 
     def _routine_thread_started(self):
         # log
@@ -477,3 +503,4 @@ class SimEngine(DiscreteEventEngine):
                 "state": "stopped"
             }
         )
+
