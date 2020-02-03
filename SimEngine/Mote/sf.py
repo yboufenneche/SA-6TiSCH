@@ -906,12 +906,14 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
     def _receive_add_request(self, request):
 
-        # for quick access
+                # for quick access
         proposed_cells = request[u'app'][u'cellList']
         #print("## Request.app: "+ str(request[u'app']) +" ----- Request.app.cellList "+ str(request[u'app'][u'cellList']))
         print("## Nbr proposed cells: " + str(len(proposed_cells)))
         #print("## Selfishness = " + str(compute_selfishness(0.36,0.7)))
         peerMac         = request[u'mac'][u'srcMac']
+
+        print ("## Parent ID: " + str(self.mote.id) + " --> Position: " + str(self.mote.getLocation()))
 
         # find available cells in the received CellList
         slots_in_cell_list = set(

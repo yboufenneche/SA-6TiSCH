@@ -25,6 +25,7 @@ from . import MoteDefines as d
 
 # Simulator-wide modules
 import SimEngine
+import random
 
 # =========================== defines =========================================
 
@@ -63,6 +64,10 @@ class Mote(object):
         self.sixp                      = sixp.SixP(self)
         self.tsch                      = tsch.Tsch(self)
         self.radio                     = radio.Radio(self)
+
+        #Location
+        #self.x                         = random.randint(1, 10)
+        #self.y                         = random.randint(1, 10)
 
     # ======================= stack ===========================================
 
