@@ -628,6 +628,13 @@ class RplOF0(RplOFBase):
         # change preferred parent if necessary
         self._update_preferred_parent()
 
+        # # Update the graph representing the toplogy
+        # myId = self.rpl.mote.id
+        # for n in self.neighbors:
+        #     neighborMac = n[u'mac_addr']
+        #     neighborId  = self.rpl.engine.get_mote_by_mac_addr(neighborMac).id
+        #     print("+++ Me : {0}  Neighbor: {1}".format(myId,  neighborId))
+
     def get_preferred_parent(self):
         if self.preferred_parent is None:
             return None

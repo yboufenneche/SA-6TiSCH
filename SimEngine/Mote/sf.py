@@ -10,8 +10,8 @@ from abc import abstractmethod
 import netaddr
 
 import SimEngine
-from . import MoteDefines as d
-from . import sixp
+from SimEngine.Mote import MoteDefines as d
+from SimEngine.Mote import sixp
 import json
 from SelfishnessDetector.fuzzySelfishnessEstimator import compute_selfishness
 
@@ -549,13 +549,22 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             return
 
         if cell_opt == self.TX_CELL_OPT:
-            if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization:
+            if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization and self.tx_cell_utilization < d.MSF_LIM_NUMCELLSUSED_VHIGH:
                 print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
                 # add one TX cell
                 self.retry_count[neighbor] = 0
                 self._request_adding_cells(
                     neighbor     = neighbor,
-                    num_tx_cells = 3
+                    num_tx_cells = 1
+                )
+
+            elif d.MSF_LIM_NUMCELLSUSED_VHIGH <= self.tx_cell_utilization:
+                print("### MSF_LIM_NUMCELLSUSED_VHIGH" + str(d.MSF_LIM_NUMCELLSUSED_VHIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
+                # add one TX cell
+                self.retry_count[neighbor] = 0
+                self._request_adding_cells(
+                    neighbor     = neighbor,
+                    num_tx_cells = 2
                 )
 
             elif self.tx_cell_utilization < d.MSF_LIM_NUMCELLSUSED_LOW:
@@ -690,6 +699,8 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                     cellOptions        = cell_options,
                     slotframe_handle   = self.SLOTFRAME_HANDLE_NEGOTIATED_CELLS
                 )
+                print (">> Mote {0} ".format(self.mote.id) + " --> Cell {0} ".format(cell) +
+                       " added with mote {0} ".format(self.engine.get_mote_by_mac_addr(neighbor).id))
             if (
                     cell_options == [d.CELLOPTION_TX]
                     and
@@ -908,12 +919,15 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
                 # for quick access
         proposed_cells = request[u'app'][u'cellList']
-        #print("## Request.app: "+ str(request[u'app']) +" ----- Request.app.cellList "+ str(request[u'app'][u'cellList']))
         print("## Nbr proposed cells: " + str(len(proposed_cells)))
         #print("## Selfishness = " + str(compute_selfishness(0.36,0.7)))
+
         peerMac         = request[u'mac'][u'srcMac']
+        applicant       = self.engine.get_mote_by_mac_addr(peerMac)
+        applicantID     = applicant.id
 
         print ("## Parent ID: " + str(self.mote.id) + " --> Position: " + str(self.mote.getLocation()))
+        print ("## Child  ID: " + str(applicantID)  + " --> Position: " + str(applicant.getLocation()))
 
         # find available cells in the received CellList
         slots_in_cell_list = set(
@@ -932,7 +946,10 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         candidate_cells = [
             c for c in proposed_cells if c[u'slotOffset'] in available_slots
         ]
-        print("## numCells: " + str(request[u'app'][u'numCells']))
+        # NumCells ?
+        num_cells = request[u'app'][u'numCells']
+        print("## numCells: {0}".format(num_cells))
+
         if len(candidate_cells) < request[u'app'][u'numCells']:
             cell_list = candidate_cells
         else:
@@ -941,9 +958,15 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 request[u'app'][u'numCells']
             )
 
-        print ("## Cell list before trying to remove " + str(self._numSelfCells()) + " cell(s) : " + str(cell_list))
-        self._reduceCells(cell_list, self._numSelfCells())
-        print ("## Cell list after trying to remove " + str(self._numSelfCells()) + " cell(s) : " + str(cell_list))
+        print ("## Cell list : " + str(cell_list))
+        # Which motes to be set as selfish ?
+        if self.mote.id == 1 or self.mote.id == 2:
+            if applicant.isFirstAddRequest[str(self.mote.id)] == True: # Is this the first time I receive an add request from this neighbor ?
+                applicant.isFirstAddRequest[str(self.mote.id)] = False
+            else:
+                self._reduceCells(cell_list, 2)
+                print ("## Cell list after trying to remove " +
+                       str (2) + " cell(s) : " + str(cell_list))
 
         # prepare callback
         if len(available_slots) > 0:
@@ -1419,12 +1442,15 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
     # Make the node selfish by removing n cells from cell_list.
     # cell_list should contain at least one (01) cell after removing cells to avoid a SIXP_RC_ERR
     """
-    def _reduceCells(self, cell_list, n):
+    def _reduceCells(self, cell_list, num_cells):
+        n = ((num_cells + 1) / 2)
         for i in range(n):
-            if len(cell_list) > 1:
+            if len(cell_list) > 0:
                 cell_list.pop()
             else:
                 break
+
+        return cell_list
 
     """
     # Get the number of cells to remove from the file config.json

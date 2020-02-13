@@ -3,7 +3,7 @@ import json
 import threading
 
 """
-A wx Frame that serves to show motes' position
+A wxPython Frame that serves to show motes' positions
 """
 class Topology(wx.Frame):
 
@@ -15,7 +15,7 @@ class Topology(wx.Frame):
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
-        self.SetTitle("Topology")
+        self.SetTitle("Network topology")
         self.SetSize((650, 400))
         self.Centre()
 

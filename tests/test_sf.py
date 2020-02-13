@@ -9,8 +9,6 @@ from builtins import filter
 from builtins import range
 from builtins import object
 from past.utils import old_div
-from itertools import chain
-import random
 import types
 
 import pytest
@@ -19,8 +17,8 @@ from . import test_utils as u
 import SimEngine.Mote.MoteDefines as d
 from SimEngine import SimLog
 from SimEngine import SimEngine
-from SimEngine.Mote.sf import SchedulingFunctionMSF
-from SimEngine.Mote.sf import SchedulingFunctionSFNone
+from SelfishnessDetector.sf import SchedulingFunctionMSF
+from SelfishnessDetector.sf import SchedulingFunctionSFNone
 
 # =========================== helpers =========================================
 

@@ -25,7 +25,7 @@ from . import MoteDefines as d
 
 # Simulator-wide modules
 import SimEngine
-import random
+
 
 # =========================== defines =========================================
 
@@ -64,6 +64,9 @@ class Mote(object):
         self.sixp                      = sixp.SixP(self)
         self.tsch                      = tsch.Tsch(self)
         self.radio                     = radio.Radio(self)
+
+        # Other
+        self.isFirstAddRequest         = {} # The mote has not already issued any add request for any neighbor
 
         #Location
         #self.x                         = random.randint(1, 10)

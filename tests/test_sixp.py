@@ -1,13 +1,12 @@
 from __future__ import absolute_import
 from builtins import object
-import copy
 import types
 
 import pytest
 
 from . import test_utils as u
 import SimEngine.Mote.MoteDefines as d
-from SimEngine.Mote.sf import SchedulingFunctionBase
+from SelfishnessDetector.sf import SchedulingFunctionBase
 from SimEngine         import SimLog
 
 # =========================== helpers =========================================

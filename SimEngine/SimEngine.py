@@ -441,6 +441,11 @@ class SimEngine(DiscreteEventEngine):
         for i in range(len(self.motes)):
             motesIds.append (self.motes[i].id)
 
+        # We initialyze firtAddRequest list of each mote
+        for mote in self.motes:
+            for id in motesIds:
+                mote.isFirstAddRequest[str(id)] = True
+
         # Create a list of locations
         ml = MotesPositions.motesLocations(motesIds)
 
