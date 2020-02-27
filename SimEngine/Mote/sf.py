@@ -961,14 +961,14 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         print ("## Cell list : " + str(cell_list))
 
         ################################################################
-        # # Which motes to be set as selfish ?
-        # #if self.mote.id == 0:
-        if self.mote.isFirstAddRequest[str(applicantID)] == True: # Is this the first time I receive an add request from this neighbor ?
-            self.mote.isFirstAddRequest[str(applicantID)] = False
-        else:
-            self._reduceCells(cell_list, 1)
-            print ("## Cell list after trying to remove " +
-            str (1) + " cell(s) : " + str(cell_list))
+        # Which motes to be set as selfish ?
+        if self.mote.id in self.engine.selfishMotesIds:
+            if self.mote.isFirstAddRequest[str(applicantID)] == True: # Is this the first time I receive an add request from this neighbor ?
+                self.mote.isFirstAddRequest[str(applicantID)] = False
+            else:
+                self._reduceCells(cell_list, 1)
+                print ("## Cell list after trying to remove " +
+                str (1) + " cell(s) : " + str(cell_list))
         ################################################################
 
         # prepare callback
