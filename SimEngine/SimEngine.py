@@ -460,8 +460,8 @@ class SimEngine(DiscreteEventEngine):
             print("Mote {0}: ID = ".format(i) + str(self.motes[i].id) + " --> Position: "+ str(self.motes[i].getLocation()))
 
         # Show motes' positions in a frame
-        motesPositions = MotesPositions.FrameThread()
-        motesPositions.start()
+        # motesPositions = MotesPositions.FrameThread()
+        # motesPositions.start()
 
     def _routine_thread_started(self):
         # log

@@ -549,7 +549,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             return
 
         if cell_opt == self.TX_CELL_OPT:
-            if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization and self.tx_cell_utilization < d.MSF_LIM_NUMCELLSUSED_VHIGH:
+            if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization:
                 print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
                 # add one TX cell
                 self.retry_count[neighbor] = 0
@@ -557,15 +557,15 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                     neighbor     = neighbor,
                     num_tx_cells = 1
                 )
-
-            elif d.MSF_LIM_NUMCELLSUSED_VHIGH <= self.tx_cell_utilization:
-                print("### MSF_LIM_NUMCELLSUSED_VHIGH" + str(d.MSF_LIM_NUMCELLSUSED_VHIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
-                # add one TX cell
-                self.retry_count[neighbor] = 0
-                self._request_adding_cells(
-                    neighbor     = neighbor,
-                    num_tx_cells = 2
-                )
+            #
+            # elif d.MSF_LIM_NUMCELLSUSED_VHIGH <= self.tx_cell_utilization:
+            #     print("### MSF_LIM_NUMCELLSUSED_VHIGH" + str(d.MSF_LIM_NUMCELLSUSED_VHIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
+            #     # add one TX cell
+            #     self.retry_count[neighbor] = 0
+            #     self._request_adding_cells(
+            #         neighbor     = neighbor,
+            #         num_tx_cells = 2
+            #     )
 
             elif self.tx_cell_utilization < d.MSF_LIM_NUMCELLSUSED_LOW:
                 tx_cells = [cell for cell in self.mote.tsch.get_cells(
@@ -959,14 +959,17 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             )
 
         print ("## Cell list : " + str(cell_list))
-        # Which motes to be set as selfish ?
-        if self.mote.id == 1 or self.mote.id == 2:
-            if applicant.isFirstAddRequest[str(self.mote.id)] == True: # Is this the first time I receive an add request from this neighbor ?
-                applicant.isFirstAddRequest[str(self.mote.id)] = False
-            else:
-                self._reduceCells(cell_list, 2)
-                print ("## Cell list after trying to remove " +
-                       str (2) + " cell(s) : " + str(cell_list))
+
+        ################################################################
+        # # Which motes to be set as selfish ?
+        # #if self.mote.id == 0:
+        if self.mote.isFirstAddRequest[str(applicantID)] == True: # Is this the first time I receive an add request from this neighbor ?
+            self.mote.isFirstAddRequest[str(applicantID)] = False
+        else:
+            self._reduceCells(cell_list, 1)
+            print ("## Cell list after trying to remove " +
+            str (1) + " cell(s) : " + str(cell_list))
+        ################################################################
 
         # prepare callback
         if len(available_slots) > 0:

@@ -5,22 +5,22 @@
     "version":                                             0,
     "execution": {
         "numCPUs":                                         1,
-        "numRuns":                                         1
+        "numRuns":                                         3
     },
     "settings": {
         "combination": {
-            "exec_numMotes":                               [21]
+            "exec_numMotes":                               [10]
         },
         "regular": {
-            "exec_numSlotframesPerRun":                    10000,
+            "exec_numSlotframesPerRun":                    2000,
             "exec_minutesPerRun":                          null,
-            "exec_randomSeed":                             "random",
+            "exec_randomSeed":                             800,
 
             "secjoin_enabled":                             true,
 
             "app":                                         "AppPeriodic",
-            "app_pkPeriod":                                70,
-            "app_pkPeriodVar":                             0.01,
+            "app_pkPeriod":                                5,
+            "app_pkPeriodVar":                             0,
             "app_pkLength":                                90,
             "app_burstTimestamp":                          null,
             "app_burstNumPackets":                         0,
@@ -49,7 +49,7 @@
 
             "radio_stats_log_period_s":                    60,
 
-            "conn_class":                                  "Linear",
+            "conn_class":                                  "Random",
             "conn_simulate_ack_drop":                      false,
 
             "conn_trace":                                  null,
