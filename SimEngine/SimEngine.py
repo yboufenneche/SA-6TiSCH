@@ -368,6 +368,8 @@ class DiscreteEventEngine(threading.Thread):
 class SimEngine(DiscreteEventEngine):
 
     DAGROOT_ID = 0
+    selfish_ratio = 0.25
+
 
     def _init_additional_local_variables(self):
         self.settings                   = SimSettings.SimSettings()
@@ -440,6 +442,12 @@ class SimEngine(DiscreteEventEngine):
         motesIds = []
         for i in range(len(self.motes)):
             motesIds.append (self.motes[i].id)
+
+        # We create the set of selfish motes
+        numMotes = len(self.motes)
+        set_size = int (numMotes * self.selfish_ratio)
+        selfishMotesIds = random.sample (motesIds, set_size)
+        print (" ## Selfish motes ids : {0}".format(selfishMotesIds))
 
         # We initialyze firtAddRequest list of each mote
         for mote in self.motes:
