@@ -6,6 +6,11 @@ scheduling function with the SixP APIs defined here. SchedulingFunctionMSF
 implemented in sf.py is another example to see.
 """
 from __future__ import absolute_import
+#
+# Added by Yassine
+#
+from __future__ import division
+from SelfishnessDetector.fuzzySelfishnessEstimator import compute_selfishness
 
 # =========================== imports =========================================
 
@@ -108,6 +113,7 @@ class SixP(object):
                 event  = d.SIXP_CALLBACK_EVENT_MAC_ACK_RECEPTION,
                 packet = packet
             )
+
         else:
             # do nothing
             pass
@@ -144,6 +150,12 @@ class SixP(object):
             maxNumCells        = maxNumCells,
             payload            = payload
         )
+
+        # applicantID = self.mote.id
+        # neighborID = self.engine.get_mote_by_mac_addr(dstMac).id
+        # print(" ###  Mote {0} requested {1} cells to mote {2}".format(applicantID, numCells, neighborID))
+        # self.mote.numRequestedCells[str(neighborID)] = numCells
+        # print (" --> {}".format(self.mote.numRequestedCells[str(neighborID)]))
 
         # create & start a transaction
         try:
@@ -421,7 +433,78 @@ class SixP(object):
         else:
             # complete the transaction if necessary
             if transaction.type == d.SIXP_TRANSACTION_TYPE_2_STEP:
-                transaction.complete()
+            #####################################################################
+                #
+                # Added by Yassine
+                #
+                try:
+                    applicant = self.mote
+                    applicantID = applicant.id
+                    neighbor = self.engine.get_mote_by_mac_addr(response[u'mac'][u'srcMac'])
+                    neighborID = neighbor.id
+
+                    _numRequestedCells = applicant.sf.numRequestedCells[str(neighborID)]
+                    _numReceivedCells = len(response[u'app'][u'cellList'])
+                    _numProposedCells = self.mote.sf.numProposedCells[str(neighborID)]
+
+                    _numAvailableSlotsApplicant = self.mote.sf.numAvailableSlots
+                    _numAvailableSlotsNeighbor = neighbor.sf.numAvailableSlots
+                    _allSlots = self.settings.tsch_slotframeLength
+                    _numUsedSlotsApplicant = _allSlots - self.mote.sf.numAvailableSlots
+                    _numUsedSlotsNeighbor = _allSlots - neighbor.sf.numAvailableSlots
+                    _numUsedSlotsAppNeig = applicant.sf.numUsedSlotsWith[str(neighborID)]
+
+                    print (response)
+                    print ("    >>> numRequestedCells = {}".format(_numRequestedCells))
+                    print ("    >>> numReceivedCells = {}".format(_numReceivedCells))
+                    print ("    >>> numProposedSlots = {}".format(_numProposedCells))
+                    print ("    >>> Mote {0} numAvailableSlots = {1}".format(applicantID, _numAvailableSlotsApplicant))
+                    print ("    >>> Mote {0} numAvailableSlots = {1}".format(neighborID, _numAvailableSlotsNeighbor))
+                    print ("    >>> Mote {0} numUsedSlots = {1}".format(applicantID, _numUsedSlotsApplicant))
+                    print ("    >>> Mote {0} numUsedSlots = {1}".format(neighborID, _numUsedSlotsNeighbor))
+                    print ("    >>> numUsedSlotsAppNei between node {0} and node {1} = {2}".format(applicantID, neighborID, _numUsedSlotsAppNeig))
+                    print ("    >>> allSlots = {}".format(_allSlots))
+
+                    n = _numRequestedCells - _numReceivedCells
+                    RSR = _numReceivedCells / _numRequestedCells
+                    if (n == 0):
+                        applicant.sf.isSelfish[str (neighborID)] = False
+                    else:
+                        OP = self.occupancy(n, _numUsedSlotsNeighbor - _numUsedSlotsAppNeig, _numProposedCells, _allSlots - _numUsedSlotsApplicant)
+                        distances = set()
+                        for mote in self.engine.motes:
+                            id = self.engine.get_mote_by_mac_addr(mote.eui64).id
+                            try:
+                                dist = len(self.engine.motes[0].rpl.computeSourceRoute(mote.get_ipv6_global_addr()))
+                                distances.add(dist)
+                                print ("Mote: {0} distance to the root: {1}".format(id, dist))
+                            except:
+                                 print ("!")
+
+                        print("Set of distances = {}".format(distances))
+                        _distance = len(self.engine.motes[0].rpl.computeSourceRoute(neighbor.get_ipv6_global_addr()))
+                        _distanceApp = len(self.engine.motes[0].rpl.computeSourceRoute(applicant.get_ipv6_global_addr()))
+                        _min = min(distances)
+                        _max = max(distances)
+                        distance = (_distance - _min) / (_max - _min)
+
+                        print ("    >>> OP = {}".format(OP))
+                        print ("    >>> Relative distance of mote : {0} is {1}".format(neighborID, distance))
+                        selfishnessValue = compute_selfishness(OP, RSR, distance)
+                        print ("   >>> Selfishness = {}".format(selfishnessValue))
+
+                        if (selfishnessValue >= 0.5):
+                            applicant.sf.isSelfish[str(neighborID)] = True
+                        else:
+                            applicant.sf.isSelfish[str(neighborID)] = False
+
+                    print ("    >>> RSR = {}".format(RSR))
+                except:
+                    print ("   STOP! No cell list received in the response ! ")
+                    print (response)
+                finally:
+                    transaction.complete()
+            #####################################################################
             elif transaction.type == d.SIXP_TRANSACTION_TYPE_3_STEP:
                 # the transaction is not finished yet
                 pass
@@ -633,6 +716,39 @@ class SixP(object):
 
         return returnVal
 
+    """
+    # Get the factorial of a number
+    """
+
+    def fact(self, x):
+        if (x == 0):
+            return 1
+        else:
+            return x * self.fact(x - 1)
+
+    """
+    # Compute occupancy (n)
+    """
+    # Added by Yassine
+    #
+
+    def occupancy(self, n, K, m, M):
+        if (n >= K):
+            x = 1
+        else:
+            try:
+                x1 = self.fact(K) / (self.fact(K - n) * self.fact(n))
+                x2 = self.fact(M) / (self.fact(M - m) * self.fact(m))
+                x= x1/x2
+
+            except:
+                x =  0
+            finally:
+                return x
+
+    """
+        # Compute occupancy (n)
+    """
 
 class SixPTransaction(object):
 
