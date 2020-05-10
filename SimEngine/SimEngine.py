@@ -367,7 +367,11 @@ class DiscreteEventEngine(threading.Thread):
 
 class SimEngine(DiscreteEventEngine):
 
-    DAGROOT_ID = 0
+    DAGROOT_ID      = 0
+    selfish_ratio   = 1
+    numSelfishMotes = 0
+    selfishMotesIds = set()
+
 
     def _init_additional_local_variables(self):
         self.settings                   = SimSettings.SimSettings()
@@ -441,10 +445,18 @@ class SimEngine(DiscreteEventEngine):
         for i in range(len(self.motes)):
             motesIds.append (self.motes[i].id)
 
-        # We initialyze firtAddRequest list of each mote
+        # We create the set of selfish motes
+        numMotes = len(self.motes)
+        self.numSelfishMotes = int (numMotes * self.selfish_ratio)
+        #set_size = int (numMotes * self.selfish_ratio)
+        #self.selfishMotesIds.extend (random.sample (motesIds, set_size))
+        #print (" ## Selfish motes ids : {0}".format(self.selfishMotesIds))
+
+        # We initialyze firtAddRequest ans numRequestedCells lists of each mote
         for mote in self.motes:
             for id in motesIds:
                 mote.isFirstAddRequest[str(id)] = True
+                # mote.numRequestedCells[str(id)] = 0
 
         # Create a list of locations
         ml = MotesPositions.motesLocations(motesIds)
@@ -460,8 +472,8 @@ class SimEngine(DiscreteEventEngine):
             print("Mote {0}: ID = ".format(i) + str(self.motes[i].id) + " --> Position: "+ str(self.motes[i].getLocation()))
 
         # Show motes' positions in a frame
-        motesPositions = MotesPositions.FrameThread()
-        motesPositions.start()
+        # motesPositions = MotesPositions.FrameThread()
+        # motesPositions.start()
 
     def _routine_thread_started(self):
         # log
