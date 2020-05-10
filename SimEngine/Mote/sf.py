@@ -574,11 +574,11 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         if cell_opt == self.TX_CELL_OPT:
             if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization:
-                print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
+                # print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
                 neighborID = self.engine.get_mote_by_mac_addr(neighbor).id
-                print (neighborID)
-                print (self.isSelfish[str(neighborID)])
-                print (self.meanRsr[str(neighborID)])
+                # print (neighborID)
+                # print (self.isSelfish[str(neighborID)])
+                # print (self.meanRsr[str(neighborID)])
 
                 # Added by Yassine
                 #
