@@ -1,5 +1,6 @@
 {
     "selfishness":{
+        "numTransactions":                                 2,
         "numSelfCells":                                    2
     },
     "version":                                             0,
@@ -14,12 +15,12 @@
         "regular": {
             "exec_numSlotframesPerRun":                    10000,
             "exec_minutesPerRun":                          null,
-            "exec_randomSeed":                             "random",
+            "exec_randomSeed":                             800,
 
             "secjoin_enabled":                             true,
 
             "app":                                         "AppPeriodic",
-            "app_pkPeriod":                                3,
+            "app_pkPeriod":                                2,
             "app_pkPeriodVar":                             0.0,
             "app_pkLength":                                90,
             "app_burstTimestamp":                          null,

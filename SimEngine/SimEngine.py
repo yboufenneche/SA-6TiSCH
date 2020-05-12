@@ -468,8 +468,8 @@ class SimEngine(DiscreteEventEngine):
         # Boot motes and set their positions
         for i in range(len(self.motes)):
             self.motes[i].boot()
-            self.motes[i].setLocation(ml[i][0], ml[i][1])
-            print("Mote {0}: ID = ".format(i) + str(self.motes[i].id) + " --> Position: "+ str(self.motes[i].getLocation()))
+            # self.motes[i].setLocation(ml[i][0], ml[i][1])
+            # print("Mote {0}: ID = ".format(i) + str(self.motes[i].id) + " --> Position: "+ str(self.motes[i].getLocation()))
 
         # Show motes' positions in a frame
         # motesPositions = MotesPositions.FrameThread()

@@ -158,17 +158,27 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         self.locked_slots         = set([]) # slots in on-going ADD transactions
         self.retry_count          = {}      # indexed by MAC address
 
-        # Other by Yassine
-        self.numRequestedCells  = {}  # The mote has not already requested any cells for any neighbor
-        self.numProposedCells   = {}
-        self.numAvailableSlots  = 0
-        self.numUsedSlotsWith   = {}
-        self.isSelfish          = {}  # All nodes are not selfish to the eyes of this node
-        self.meanRsr            = {}
+        # Added by Yassine
+        self.numRequestedCells     = {}  # The mote has not already requested any cells for any neighbor
+        self.numProposedCells      = {}
+        self.numAvailableSlots     = 0
+        self.numUsedSlotsWith      = {}
+        self.isSelfish             = {}  # All nodes are not selfish to the eyes of this node
+        self.cumulativeRsr         = {}
+        self.meanRsr               = {}
+        self.cumulativeSelfishness = {}
+        self.NUM_TRANSACTIONS      = 2
+        self.transCounter          = {}
+        self.startMononitoring     = {}
+
         for i in range(0, SimSettings.SimSettings().exec_numMotes, 1):
-            self.numUsedSlotsWith [str(i)] = 0
-            self.isSelfish[str(i)]         = False
-            self.meanRsr[str(i)]           = 0
+            self.numUsedSlotsWith [str(i)]     = 0
+            self.isSelfish[str(i)]             = False
+            self.cumulativeRsr[str(i)]         = 0
+            self.meanRsr[str(i)]               = 0
+            self.cumulativeSelfishness[str(i)] = 0
+            self.transCounter[str(i)]          = 0
+            self.startMononitoring[str(i)]     = False
 
 
     # ======================= public ==========================================
@@ -583,7 +593,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 # Added by Yassine
                 #
                 # Compute the number of greedy cells (ngc)
-                if self.isSelfish[str(neighborID)] == True:
+                if (self.isSelfish[str(neighborID)] == True):
                     ngc = self._numGreedyCells(1, self.meanRsr[str(neighborID)], 1)
                 else:
                     ngc = 0

@@ -49,7 +49,7 @@ def compute_selfishness(pr_value, rsr_value, distance_value):
     rule4 = ctrl.Rule(rsr['lowRsr']     & pr['mediumPr'] & distance['far'], selfishness['highSelfishness'])
     rule5 = ctrl.Rule(rsr['lowRsr']     & pr['highPr']   & distance['near'], selfishness['veryLowSelfishness'])
     rule6 = ctrl.Rule(rsr['lowRsr']     & pr['highPr']   & distance['far'], selfishness['lowSelfishness'])
-    rule7 = ctrl.Rule(rsr['mediumRsr']  & pr['lowPr']    & distance['near'], selfishness['mediumSelfishness'])
+    rule7 = ctrl.Rule(rsr['mediumRsr']  & pr['lowPr']    & distance['near'], selfishness['highSelfishness'])
     rule8 = ctrl.Rule(rsr['mediumRsr']  & pr['lowPr']    & distance['far'], selfishness['highSelfishness'])
     rule9 = ctrl.Rule(rsr['mediumRsr']  & pr['mediumPr'] & distance['near'], selfishness['lowSelfishness'])
     rule10 = ctrl.Rule(rsr['mediumRsr'] & pr['mediumPr'] & distance['far'], selfishness['mediumSelfishness'])

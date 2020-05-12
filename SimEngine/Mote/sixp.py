@@ -467,41 +467,66 @@ class SixP(object):
 
                     n = _numRequestedCells - _numReceivedCells
                     RSR = _numReceivedCells / _numRequestedCells
-                    if (n == 0):
-                        applicant.sf.isSelfish[str (neighborID)] = False
-                    else:
-                        OP = self.occupancy(n, _numUsedSlotsNeighbor - _numUsedSlotsAppNeig, _numProposedCells, _allSlots - _numUsedSlotsApplicant)
-                        distances = set()
-                        for mote in self.engine.motes:
-                            id = self.engine.get_mote_by_mac_addr(mote.eui64).id
-                            try:
-                                dist = len(self.engine.motes[0].rpl.computeSourceRoute(mote.get_ipv6_global_addr()))
-                                distances.add(dist)
-                                print ("Mote: {0} distance to the root: {1}".format(id, dist))
-                            except:
-                                 print ("!")
 
-                        print("Set of distances = {}".format(distances))
-                        _distance = len(self.engine.motes[0].rpl.computeSourceRoute(neighbor.get_ipv6_global_addr()))
-                        _distanceApp = len(self.engine.motes[0].rpl.computeSourceRoute(applicant.get_ipv6_global_addr()))
-                        _min = min(distances)
-                        _max = max(distances)
-                        distance = (_distance - _min) / (_max - _min)
+                    if ((self.mote.sf.startMononitoring[str(neighborID)] == False) and (RSR < 1)):
+                        self.mote.sf.startMononitoring[str(neighborID)] = True
 
-                        print ("    >>> OP = {}".format(OP))
-                        print ("    >>> Relative distance of mote : {0} is {1}".format(neighborID, distance))
-                        selfishnessValue = compute_selfishness(OP, RSR, distance)
-                        print ("   >>> Selfishness = {}".format(selfishnessValue))
+                    if (self.mote.sf.startMononitoring[str(neighborID)] == True):
+                        if (self.mote.sf.transCounter[str(neighborID)] < self.mote.sf.NUM_TRANSACTIONS):
+                            self.mote.sf.transCounter[str(neighborID)] += 1
+                            print("Mote {0} --> mote {1} : transCounter = {2}".format(applicantID, neighborID, self.mote.sf.transCounter[str(neighborID)]))
+                            self.mote.sf.cumulativeRsr[str(neighborID)] += RSR
+                            if (n == 0):
+                                selfishnessValue = 0
+                            else:
+                                OP = self.occupancy(n, _numUsedSlotsNeighbor - _numUsedSlotsAppNeig, _numProposedCells,
+                                                    _allSlots - _numUsedSlotsApplicant)
+                                distances = set()
+                                for mote in self.engine.motes:
+                                    id = self.engine.get_mote_by_mac_addr(mote.eui64).id
+                                    try:
+                                        dist = len(
+                                            self.engine.motes[0].rpl.computeSourceRoute(mote.get_ipv6_global_addr()))
+                                        distances.add(dist)
+                                        print ("Mote: {0} distance to the root: {1}".format(id, dist))
+                                    except:
+                                        print ("!")
 
-                        if (selfishnessValue >= 0.5):
-                            applicant.sf.isSelfish[str(neighborID)] = True
+                                print("Set of distances = {}".format(distances))
+                                _distance = len(
+                                    self.engine.motes[0].rpl.computeSourceRoute(neighbor.get_ipv6_global_addr()))
+                                _distanceApp = len(
+                                    self.engine.motes[0].rpl.computeSourceRoute(applicant.get_ipv6_global_addr()))
+                                _min = min(distances)
+                                _max = max(distances)
+                                distance = (_distance - _min) / (_max - _min)
+
+                                print ("    >>> OP = {}".format(OP))
+                                print ("    >>> Relative distance of mote : {0} is {1}".format(neighborID, distance))
+                                selfishnessValue = compute_selfishness(OP, RSR, distance)
+                                print ("   >>> Mote {0} --> mote {1} : selfishness at transaction {2} = {3}".format(applicantID, neighborID, self.mote.sf.transCounter[str(neighborID)], selfishnessValue))
+
+                            self.mote.sf.cumulativeSelfishness[str(neighborID)] += selfishnessValue
                         else:
-                            applicant.sf.isSelfish[str(neighborID)] = False
+                            self.mote.sf.meanRsr[str(neighborID)] = self.mote.sf.cumulativeRsr[str(neighborID)] / self.mote.sf.NUM_TRANSACTIONS
+                            meanSelfishness = self.mote.sf.cumulativeSelfishness [str(neighborID)] / self.mote.sf.NUM_TRANSACTIONS
+                            if (meanSelfishness >= 0.5):
+                                applicant.sf.isSelfish[str(neighborID)] = True
+                            else:
+                                applicant.sf.isSelfish[str(neighborID)] = False
+                                self.mote.sf.startMononitoring[str(neighborID)] = False
+
+                            self.mote.sf.transCounter[str(neighborID)] = 0
+                            self.mote.sf.cumulativeRsr[str(neighborID)] = 0
+                            self.mote.sf.cumulativeSelfishness[str(neighborID)] = 0
 
                     print ("    >>> RSR = {}".format(RSR))
-                except:
-                    print ("   STOP! No cell list received in the response ! ")
-                    print (response)
+
+                except Exception as e:
+                    print ("   STOP.. there was an exception ! ")
+                    print (str(e))
+                    # print (response)
+
                 finally:
                     transaction.complete()
             #####################################################################
