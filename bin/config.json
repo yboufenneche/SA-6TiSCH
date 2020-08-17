@@ -15,12 +15,12 @@
         "regular": {
             "exec_numSlotframesPerRun":                    15000,
             "exec_minutesPerRun":                          null,
-            "exec_randomSeed":                             3000,
+            "exec_randomSeed":                             8000,
 
             "secjoin_enabled":                             true,
 
             "app":                                         "AppPeriodic",
-            "app_pkPeriod":                                10,
+            "app_pkPeriod":                                5,
             "app_pkPeriodVar":                             0.0,
             "app_pkLength":                                90,
             "app_burstTimestamp":                          null,
