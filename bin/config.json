@@ -1,26 +1,27 @@
 {
     "selfishness":{
+        "numTransactions":                                 2,
         "numSelfCells":                                    2
     },
     "version":                                             0,
     "execution": {
         "numCPUs":                                         1,
-        "numRuns":                                         3
+        "numRuns":                                         1
     },
     "settings": {
         "combination": {
-            "exec_numMotes":                               [10]
+            "exec_numMotes":                               [100]
         },
         "regular": {
-            "exec_numSlotframesPerRun":                    2000,
+            "exec_numSlotframesPerRun":                    15000,
             "exec_minutesPerRun":                          null,
-            "exec_randomSeed":                             800,
+            "exec_randomSeed":                             3000,
 
             "secjoin_enabled":                             true,
 
             "app":                                         "AppPeriodic",
-            "app_pkPeriod":                                5,
-            "app_pkPeriodVar":                             0,
+            "app_pkPeriod":                                10,
+            "app_pkPeriodVar":                             0.0,
             "app_pkLength":                                90,
             "app_burstTimestamp":                          null,
             "app_burstNumPackets":                         0,

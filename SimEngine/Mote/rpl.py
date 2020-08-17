@@ -263,6 +263,14 @@ class Rpl(object):
             return
 
         dio = self._create_DIO(dstIp)
+        ################################################################
+        # Which motes to be set as selfish ?
+        if len(
+                self.engine.selfishMotesIds) < self.engine.numSelfishMotes and self.mote.id not in self.engine.selfishMotesIds:
+            if self.mote.id != 0 or self.engine.selfish_ratio == 1:
+                self.engine.selfishMotesIds.add(self.mote.id)
+                # print(" ## Selfish motes ids : {} ".format(self.engine.selfishMotesIds))
+        ################################################################
 
         # log
         self.log(

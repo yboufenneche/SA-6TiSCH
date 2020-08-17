@@ -4,12 +4,17 @@ from __future__ import absolute_import
 from builtins import range
 from builtins import object
 import random
+import math
 import sys
 from abc import abstractmethod
 
 import netaddr
 
 import SimEngine
+# Added by Yassine
+#
+from .. import SimSettings
+#
 from SimEngine.Mote import MoteDefines as d
 from SimEngine.Mote import sixp
 import json
@@ -153,6 +158,28 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         self.rx_cell_utilization  = 0
         self.locked_slots         = set([]) # slots in on-going ADD transactions
         self.retry_count          = {}      # indexed by MAC address
+
+        # Added by Yassine
+        self.numRequestedCells     = {}  # The mote has not already requested any cells for any neighbor
+        self.numProposedCells      = {}
+        self.numAvailableSlots     = 0
+        self.numUsedSlotsWith      = {}
+        self.isSelfish             = {}  # All nodes are not selfish to the eyes of this node
+        self.cumulativeRsr         = {}
+        self.meanRsr               = {}
+        self.cumulativeSelfishness = {}
+        self.NUM_TRANSACTIONS      = 2
+        self.transCounter          = {}
+        self.startMononitoring     = {}
+
+        for i in range(0, SimSettings.SimSettings().exec_numMotes, 1):
+            self.numUsedSlotsWith [str(i)]     = 0
+            self.isSelfish[str(i)]             = False
+            self.cumulativeRsr[str(i)]         = 0
+            self.meanRsr[str(i)]               = 0
+            self.cumulativeSelfishness[str(i)] = 0
+            self.transCounter[str(i)]          = 0
+            self.startMononitoring[str(i)]     = False
 
 
     # ======================= public ==========================================
@@ -480,6 +507,10 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             ],
             slotframe_handle = self.SLOTFRAME_HANDLE_AUTONOMOUS_CELLS
         )
+        # Added by Yassine
+        #
+        self.numUsedSlotsWith[str(self.engine.get_mote_by_mac_addr(mac_addr).id)] += 1
+        #
 
     def deallocate_autonomous_tx_cell(self, mac_addr):
         slot_offset, channel_offset = self._compute_autonomous_cell(mac_addr)
@@ -493,6 +524,10 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             ],
             slotframe_handle = self.SLOTFRAME_HANDLE_AUTONOMOUS_CELLS
         )
+        # Added by Yassine
+        #
+        self.numUsedSlotsWith[str(self.engine.get_mote_by_mac_addr(mac_addr).id)] -= 1
+        #
 
     # ======================= private ==========================================
 
@@ -550,12 +585,26 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         if cell_opt == self.TX_CELL_OPT:
             if d.MSF_LIM_NUMCELLSUSED_HIGH < self.tx_cell_utilization:
-                print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
-                # add one TX cell
+                # print("### MSF_LIM_NUMCELLSUSED_HIGH" + str(d.MSF_LIM_NUMCELLSUSED_HIGH) + "TX CELL UTILISATION = " + str(self.tx_cell_utilization))
+                neighborID = self.engine.get_mote_by_mac_addr(neighbor).id
+                # print (neighborID)
+                # print (self.isSelfish[str(neighborID)])
+                # print (self.meanRsr[str(neighborID)])
+
+                # Added by Yassine
+                #
+                # Compute the number of greedy cells (ngc)
+                #
+                if (self.isSelfish[str(neighborID)] == True):
+                    ngc = self._numGreedyCells(1, self.meanRsr[str(neighborID)], 1)
+                else:
+                    ngc = 0
+                #
+                # add one TX cell plus the number of greedy cells
                 self.retry_count[neighbor] = 0
                 self._request_adding_cells(
                     neighbor     = neighbor,
-                    num_tx_cells = 1
+                    num_tx_cells = 1 #+ ngc
                 )
             #
             # elif d.MSF_LIM_NUMCELLSUSED_VHIGH <= self.tx_cell_utilization:
@@ -699,8 +748,12 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                     cellOptions        = cell_options,
                     slotframe_handle   = self.SLOTFRAME_HANDLE_NEGOTIATED_CELLS
                 )
-                print (">> Mote {0} ".format(self.mote.id) + " --> Cell {0} ".format(cell) +
-                       " added with mote {0} ".format(self.engine.get_mote_by_mac_addr(neighbor).id))
+                # Added by Yassine
+                #
+                #print (">> Mote {0} [MAC: {1}] ".format(self.mote.id, self.mote.get_mac_addr()) + " --> Cell {0} ".format(cell) +
+                #       " added with mote {0} [MAC: {1}]".format(self.engine.get_mote_by_mac_addr(neighbor).id,neighbor))
+                self.numUsedSlotsWith [str(self.engine.get_mote_by_mac_addr(neighbor).id)] += 1
+                #
             if (
                     cell_options == [d.CELLOPTION_TX]
                     and
@@ -730,6 +783,10 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 cellOptions      = cell_options,
                 slotframe_handle = self.SLOTFRAME_HANDLE_NEGOTIATED_CELLS
             )
+            # Added by Yassine
+            #
+            self.numUsedSlotsWith[str(self.engine.get_mote_by_mac_addr(neighbor).id)] -= 1
+            #
 
     def _clear_cells(self, neighbor):
         cells = self.mote.tsch.get_cells(
@@ -746,6 +803,10 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 cellOptions      = cell.options,
                 slotframe_handle = self.SLOTFRAME_HANDLE_NEGOTIATED_CELLS
             )
+            # Added by Yassine
+            #
+            self.numUsedSlotsWith[str(self.engine.get_mote_by_mac_addr(neighbor).id)] -= 1
+            #
         self.mote.sixp.reset_seqnum(neighbor)
 
     def _relocate_cells(
@@ -858,6 +919,10 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             num_rx_cells   = 0
         ):
 
+        # Added by Yassine
+        #
+        self.numAvailableSlots = len (self._get_available_slots())
+        #
         # determine num_cells and cell_options; update num_{tx,rx}_cells
         if num_tx_cells > 0:
             cell_options = self.TX_CELL_OPT
@@ -917,17 +982,20 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
     def _receive_add_request(self, request):
 
-                # for quick access
+        # for quick access
         proposed_cells = request[u'app'][u'cellList']
-        print("## Nbr proposed cells: " + str(len(proposed_cells)))
+        #print("## Nbr proposed cells: " + str(len(proposed_cells)))
         #print("## Selfishness = " + str(compute_selfishness(0.36,0.7)))
 
         peerMac         = request[u'mac'][u'srcMac']
         applicant       = self.engine.get_mote_by_mac_addr(peerMac)
         applicantID     = applicant.id
-
-        print ("## Parent ID: " + str(self.mote.id) + " --> Position: " + str(self.mote.getLocation()))
-        print ("## Child  ID: " + str(applicantID)  + " --> Position: " + str(applicant.getLocation()))
+        applicant.sf.numProposedCells [str(self.mote.id)] = len(proposed_cells)
+        self.numAvailableSlots = len (self._get_available_slots())
+        # print("## Nbr proposed cells: " + str(applicant.sf.numProposedCells [str(self.mote.id)]))
+        #
+        # print ("## Parent ID: " + str(self.mote.id) + " --> Position: " + str(self.mote.getLocation()))
+        # print ("## Child  ID: " + str(applicantID)  + " --> Position: " + str(applicant.getLocation()))
 
         # find available cells in the received CellList
         slots_in_cell_list = set(
@@ -938,9 +1006,8 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 set(self._get_available_slots())
             )
         )
-        print("## Slots in cellList: " + str(slots_in_cell_list))
-        print("## Available slots: " + str(available_slots))
-
+        # print("## Slots in cellList: " + str(slots_in_cell_list))
+        # print("## Available slots: " + str(available_slots))
 
         # prepare cell_list
         candidate_cells = [
@@ -948,7 +1015,8 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         ]
         # NumCells ?
         num_cells = request[u'app'][u'numCells']
-        print("## numCells: {0}".format(num_cells))
+        applicant.sf.numRequestedCells[str(self.mote.id)] = num_cells
+        # print("  >>> Node {0} claimed {1} cells from node {2} ".format(applicantID, applicant.sf.numRequestedCells[str(self.mote.id)], self.mote.id))
 
         if len(candidate_cells) < request[u'app'][u'numCells']:
             cell_list = candidate_cells
@@ -958,17 +1026,24 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 request[u'app'][u'numCells']
             )
 
-        print ("## Cell list : " + str(cell_list))
+        # print ("## Cell list : " + str(cell_list))
 
         ################################################################
         # Which motes to be set as selfish ?
+        # if len (self.engine.selfishMotesIds) < self.engine.numSelfishMotes and self.mote.id not in self.engine.selfishMotesIds:
+        #     if self.mote.id != 0 or self.engine.selfish_ratio == 1:
+        #         self.engine.selfishMotesIds.add(self.mote.id)
+        #         print(" ## Selfish motes ids : {} ".format(self.engine.selfishMotesIds))
+        ################################################################
+        # When the mote is selfish
+        ################################################################
         if self.mote.id in self.engine.selfishMotesIds:
             if self.mote.isFirstAddRequest[str(applicantID)] == True: # Is this the first time I receive an add request from this neighbor ?
                 self.mote.isFirstAddRequest[str(applicantID)] = False
             else:
                 self._reduceCells(cell_list, 1)
-                print ("## Cell list after trying to remove " +
-                str (1) + " cell(s) : " + str(cell_list))
+                # print ("## Cell list after trying to remove " +
+                # str (1) + " cell(s) : " + str(cell_list))
         ################################################################
 
         # prepare callback
@@ -1463,3 +1538,12 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
             dat = json.load(conf)
 
         return dat["selfishness"]["numSelfCells"]
+
+    """
+    # Compute the number of greedy cells
+    """
+    def _numGreedyCells(self, numCells, rsr, c):
+        if (rsr == 0):
+            return c
+        else:
+            return int (math.ceil(numCells * (1 - rsr)/rsr))

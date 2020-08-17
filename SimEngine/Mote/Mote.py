@@ -67,6 +67,7 @@ class Mote(object):
 
         # Other
         self.isFirstAddRequest         = {} # The mote has not already issued any add request for any neighbor
+        # self.numUsedSlots
 
         #Location
         #self.x                         = random.randint(1, 10)
