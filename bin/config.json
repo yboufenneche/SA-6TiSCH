@@ -10,17 +10,17 @@
     },
     "settings": {
         "combination": {
-            "exec_numMotes":                               [20]
+            "exec_numMotes":                               [100]
         },
         "regular": {
-            "exec_numSlotframesPerRun":                    10000,
+            "exec_numSlotframesPerRun":                    15000,
             "exec_minutesPerRun":                          null,
-            "exec_randomSeed":                             800,
+            "exec_randomSeed":                             3000,
 
             "secjoin_enabled":                             true,
 
             "app":                                         "AppPeriodic",
-            "app_pkPeriod":                                2,
+            "app_pkPeriod":                                10,
             "app_pkPeriodVar":                             0.0,
             "app_pkLength":                                90,
             "app_burstTimestamp":                          null,

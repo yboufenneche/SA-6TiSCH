@@ -368,7 +368,7 @@ class DiscreteEventEngine(threading.Thread):
 class SimEngine(DiscreteEventEngine):
 
     DAGROOT_ID      = 0
-    selfish_ratio   = 1
+    selfish_ratio   = 0.5
     numSelfishMotes = 0
     selfishMotesIds = set()
 

@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from builtins import range
 from builtins import object
 import random
+import math
 import sys
 from abc import abstractmethod
 
@@ -593,15 +594,17 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 # Added by Yassine
                 #
                 # Compute the number of greedy cells (ngc)
+                #
                 if (self.isSelfish[str(neighborID)] == True):
                     ngc = self._numGreedyCells(1, self.meanRsr[str(neighborID)], 1)
                 else:
                     ngc = 0
+                #
                 # add one TX cell plus the number of greedy cells
                 self.retry_count[neighbor] = 0
                 self._request_adding_cells(
                     neighbor     = neighbor,
-                    num_tx_cells = 1 + ngc
+                    num_tx_cells = 1 #+ ngc
                 )
             #
             # elif d.MSF_LIM_NUMCELLSUSED_VHIGH <= self.tx_cell_utilization:
@@ -747,8 +750,8 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 )
                 # Added by Yassine
                 #
-                print (">> Mote {0} [MAC: {1}] ".format(self.mote.id, self.mote.get_mac_addr()) + " --> Cell {0} ".format(cell) +
-                       " added with mote {0} [MAC: {1}]".format(self.engine.get_mote_by_mac_addr(neighbor).id,neighbor))
+                #print (">> Mote {0} [MAC: {1}] ".format(self.mote.id, self.mote.get_mac_addr()) + " --> Cell {0} ".format(cell) +
+                #       " added with mote {0} [MAC: {1}]".format(self.engine.get_mote_by_mac_addr(neighbor).id,neighbor))
                 self.numUsedSlotsWith [str(self.engine.get_mote_by_mac_addr(neighbor).id)] += 1
                 #
             if (
@@ -1012,9 +1015,8 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         ]
         # NumCells ?
         num_cells = request[u'app'][u'numCells']
-        # print("## numCells: {0}".format(num_cells))
         applicant.sf.numRequestedCells[str(self.mote.id)] = num_cells
-        print("  >>> Node {0} claimed {1} cells from node {2} ".format(applicantID, applicant.sf.numRequestedCells[str(self.mote.id)], self.mote.id))
+        # print("  >>> Node {0} claimed {1} cells from node {2} ".format(applicantID, applicant.sf.numRequestedCells[str(self.mote.id)], self.mote.id))
 
         if len(candidate_cells) < request[u'app'][u'numCells']:
             cell_list = candidate_cells
@@ -1028,10 +1030,10 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
 
         ################################################################
         # Which motes to be set as selfish ?
-        if len (self.engine.selfishMotesIds) < self.engine.numSelfishMotes and self.mote.id not in self.engine.selfishMotesIds:
-            if self.mote.id != 0 or self.engine.selfish_ratio == 1:
-                self.engine.selfishMotesIds.add(self.mote.id)
-                print(" ## Selfish motes ids : {} ".format(self.engine.selfishMotesIds))
+        # if len (self.engine.selfishMotesIds) < self.engine.numSelfishMotes and self.mote.id not in self.engine.selfishMotesIds:
+        #     if self.mote.id != 0 or self.engine.selfish_ratio == 1:
+        #         self.engine.selfishMotesIds.add(self.mote.id)
+        #         print(" ## Selfish motes ids : {} ".format(self.engine.selfishMotesIds))
         ################################################################
         # When the mote is selfish
         ################################################################
@@ -1040,8 +1042,8 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 self.mote.isFirstAddRequest[str(applicantID)] = False
             else:
                 self._reduceCells(cell_list, 1)
-                print ("## Cell list after trying to remove " +
-                str (1) + " cell(s) : " + str(cell_list))
+                # print ("## Cell list after trying to remove " +
+                # str (1) + " cell(s) : " + str(cell_list))
         ################################################################
 
         # prepare callback
@@ -1544,4 +1546,4 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         if (rsr == 0):
             return c
         else:
-            return numCells * (1 - rsr)/rsr
+            return int (math.ceil(numCells * (1 - rsr)/rsr))

@@ -454,16 +454,16 @@ class SixP(object):
                     _numUsedSlotsNeighbor = _allSlots - neighbor.sf.numAvailableSlots
                     _numUsedSlotsAppNeig = applicant.sf.numUsedSlotsWith[str(neighborID)]
 
-                    print (response)
-                    print ("    >>> numRequestedCells = {}".format(_numRequestedCells))
-                    print ("    >>> numReceivedCells = {}".format(_numReceivedCells))
-                    print ("    >>> numProposedSlots = {}".format(_numProposedCells))
-                    print ("    >>> Mote {0} numAvailableSlots = {1}".format(applicantID, _numAvailableSlotsApplicant))
-                    print ("    >>> Mote {0} numAvailableSlots = {1}".format(neighborID, _numAvailableSlotsNeighbor))
-                    print ("    >>> Mote {0} numUsedSlots = {1}".format(applicantID, _numUsedSlotsApplicant))
-                    print ("    >>> Mote {0} numUsedSlots = {1}".format(neighborID, _numUsedSlotsNeighbor))
-                    print ("    >>> numUsedSlotsAppNei between node {0} and node {1} = {2}".format(applicantID, neighborID, _numUsedSlotsAppNeig))
-                    print ("    >>> allSlots = {}".format(_allSlots))
+                    # print (response)
+                    # print ("    >>> numRequestedCells = {}".format(_numRequestedCells))
+                    # print ("    >>> numReceivedCells = {}".format(_numReceivedCells))
+                    # print ("    >>> numProposedSlots = {}".format(_numProposedCells))
+                    # print ("    >>> Mote {0} numAvailableSlots = {1}".format(applicantID, _numAvailableSlotsApplicant))
+                    # print ("    >>> Mote {0} numAvailableSlots = {1}".format(neighborID, _numAvailableSlotsNeighbor))
+                    # print ("    >>> Mote {0} numUsedSlots = {1}".format(applicantID, _numUsedSlotsApplicant))
+                    # print ("    >>> Mote {0} numUsedSlots = {1}".format(neighborID, _numUsedSlotsNeighbor))
+                    # print ("    >>> numUsedSlotsAppNei between node {0} and node {1} = {2}".format(applicantID, neighborID, _numUsedSlotsAppNeig))
+                    # print ("    >>> allSlots = {}".format(_allSlots))
 
                     n = _numRequestedCells - _numReceivedCells
                     RSR = _numReceivedCells / _numRequestedCells
@@ -474,7 +474,7 @@ class SixP(object):
                     if (self.mote.sf.startMononitoring[str(neighborID)] == True):
                         if (self.mote.sf.transCounter[str(neighborID)] < self.mote.sf.NUM_TRANSACTIONS):
                             self.mote.sf.transCounter[str(neighborID)] += 1
-                            print("Mote {0} --> mote {1} : transCounter = {2}".format(applicantID, neighborID, self.mote.sf.transCounter[str(neighborID)]))
+                            # print("Mote {0} --> mote {1} : transCounter = {2}".format(applicantID, neighborID, self.mote.sf.transCounter[str(neighborID)]))
                             self.mote.sf.cumulativeRsr[str(neighborID)] += RSR
                             if (n == 0):
                                 selfishnessValue = 0
@@ -488,11 +488,11 @@ class SixP(object):
                                         dist = len(
                                             self.engine.motes[0].rpl.computeSourceRoute(mote.get_ipv6_global_addr()))
                                         distances.add(dist)
-                                        print ("Mote: {0} distance to the root: {1}".format(id, dist))
+                                        # print ("Mote: {0} distance to the root: {1}".format(id, dist))
                                     except:
-                                        print ("!")
+                                        pass
 
-                                print("Set of distances = {}".format(distances))
+                                # print("Set of distances = {}".format(distances))
                                 _distance = len(
                                     self.engine.motes[0].rpl.computeSourceRoute(neighbor.get_ipv6_global_addr()))
                                 _distanceApp = len(
@@ -501,10 +501,10 @@ class SixP(object):
                                 _max = max(distances)
                                 distance = (_distance - _min) / (_max - _min)
 
-                                print ("    >>> OP = {}".format(OP))
-                                print ("    >>> Relative distance of mote : {0} is {1}".format(neighborID, distance))
+                                # print ("    >>> OP = {}".format(OP))
+                                # print ("    >>> Relative distance of mote : {0} is {1}".format(neighborID, distance))
                                 selfishnessValue = compute_selfishness(OP, RSR, distance)
-                                print ("   >>> Mote {0} --> mote {1} : selfishness at transaction {2} = {3}".format(applicantID, neighborID, self.mote.sf.transCounter[str(neighborID)], selfishnessValue))
+                                # print ("   >>> Mote {0} --> mote {1} : selfishness at transaction {2} = {3}".format(applicantID, neighborID, self.mote.sf.transCounter[str(neighborID)], selfishnessValue))
 
                             self.mote.sf.cumulativeSelfishness[str(neighborID)] += selfishnessValue
                         else:
@@ -520,7 +520,7 @@ class SixP(object):
                             self.mote.sf.cumulativeRsr[str(neighborID)] = 0
                             self.mote.sf.cumulativeSelfishness[str(neighborID)] = 0
 
-                    print ("    >>> RSR = {}".format(RSR))
+                    # print ("    >>> RSR = {}".format(RSR))
 
                 except Exception as e:
                     print ("   STOP.. there was an exception ! ")
