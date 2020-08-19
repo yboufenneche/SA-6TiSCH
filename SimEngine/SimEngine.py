@@ -368,7 +368,12 @@ class DiscreteEventEngine(threading.Thread):
 class SimEngine(DiscreteEventEngine):
 
     DAGROOT_ID      = 0
-    selfish_ratio   = 1
+
+    with open('config.json') as conf:
+        dat = json.load(conf)
+
+    selfish_ratio   = dat["selfishness"]["self_rate"]
+    print("**** self rate = {}".format(selfish_ratio))
     numSelfishMotes = 0
     selfishMotesIds = set()
 
