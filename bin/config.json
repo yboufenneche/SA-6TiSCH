@@ -1,7 +1,8 @@
 {
     "selfishness":{
         "numTransactions":                                 2,
-        "numSelfCells":                                    2
+        "numSelfCells":                                    2,
+        "self_rate":                                       0.2222
     },
     "version":                                             0,
     "execution": {
@@ -15,7 +16,7 @@
         "regular": {
             "exec_numSlotframesPerRun":                    15000,
             "exec_minutesPerRun":                          null,
-            "exec_randomSeed":                             8000,
+            "exec_randomSeed":                             10000,
 
             "secjoin_enabled":                             true,
 

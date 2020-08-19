@@ -604,7 +604,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 self.retry_count[neighbor] = 0
                 self._request_adding_cells(
                     neighbor     = neighbor,
-                    num_tx_cells = 1 #+ ngc
+                    num_tx_cells = 1 + ngc
                 )
             #
             # elif d.MSF_LIM_NUMCELLSUSED_VHIGH <= self.tx_cell_utilization:
