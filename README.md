@@ -1,13 +1,36 @@
-# The 6TiSCH Simulator
+## SA-6TiSCH
 
-Branch    | Build Status
---------- | -------------
-`master`  | [![Build Status](https://openwsn-builder.paris.inria.fr/buildStatus/icon?job=6TiSCH%20Simulator/master)](https://openwsn-builder.paris.inria.fr/job/6TiSCH%20Simulator/job/master/)
-`develop` | [![Build Status](https://openwsn-builder.paris.inria.fr/buildStatus/icon?job=6TiSCH%20Simulator/develop)](https://openwsn-builder.paris.inria.fr/job/6TiSCH%20Simulator/job/develop/)
+SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. It includes detection and reaction algorithms for selfish nodes. The selfish behavior itself and the detection algorithm are implemented inside the file sixp.py, while the rection algorithm is impelemnted inside the file sf.py.
+ 
+Authors:
 
-Dealing with Mibehaving Nodes in Secure Internet of Things Networks:
+* Yassine Boufenneche (yboufenneche@usthb.dz)
+* Rafik Zitouni (rafik.zitouni@ece.fr)
 
-I try to implement my proposed approaches in the context of my thesis. I start with the paper aforementioned.
+## SelfishnessDetector
+
+This module represents the Fuzzy Selfishness Estimator (FSE). It relies on fuzzy logic theory to compute a value of selfishness for one node.
+
+## Detection algorithm
+
+The detection algorithm uses the selfishness module, and is implemented inside the file "SimEngine/Mote/sixp.py".
+
+## Reaction algorithm
+
+The reaction mechanism is implemented inside the file "SimEngine/Mote/sf.py"
+
+## Results
+
+The "custom_plots" folder hosts the results files as well as Python files used to generate our plots and boxes.
+
+Results files are stored inside the "custom_plots/kpis" folder, and they are named following this logic: NRUN_SELFRATE_exec_numMotes_NMOTES.dat.kpi
+
+* NRUN = the number of the run for the same configuration.
+* SELFRATE = the selfishness rate.
+* NMOTES = the number of nodes used in the simulation.
+* If the file name starts with "R", this means that the reaction mechanism was activated. Otherwise, no recation mechanism is used.
+
+
  
 Core Developers:
 
