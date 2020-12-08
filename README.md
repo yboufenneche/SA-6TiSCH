@@ -1,6 +1,6 @@
 ## SA-6TiSCH: Selfishness-Aware 6TiSCH
 
-SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. It includes detection and reaction algorithms for selfish nodes. The detection algorithm is implemented in the file six. Py, while the selfish behavior itself and the reaction algorithm are implemented inside the file sf.py.
+SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. It includes detection and reaction algorithms for selfish nodes. The detection algorithm is implemented in the file `sixp.py`, while the selfish behavior itself and the reaction algorithm are implemented inside the file `sf.py`.
  
 Authors:
 
@@ -13,26 +13,26 @@ This module represents the Fuzzy Selfishness Estimator (FSE). It relies on fuzzy
 
 ## Detection algorithm
 
-The detection algorithm uses the selfishness module, and is implemented in the file "SimEngine/Mote/sixp. Pay".
+The detection algorithm uses the selfishness module, and is implemented in the file `SimEngine/Mote/sixp.py`.
 
 ## Reaction algorithm
 
-The reaction mechanism is implemented in the file "SimEngine/Mote/sf.py"
+The reaction mechanism is implemented in the file `SimEngine/Mote/sf.py`
 
 ## Choosing selfish nodes
 
-The strategy of choosing which nodes to be configured as selfish ones is implemented in the files "SimEngine/SimEngine.py" and "SimEngine/rpl.py".
+The strategy of choosing which nodes to be configured as selfish ones is implemented in the files `SimEngine/SimEngine.py` and `SimEngine/rpl.py`.
 
 ## Results
 
 The "custom_plots" folder hosts the results files as well as Python files used to generate our plots and boxes.
 
-Results files are stored inside the "custom_plots/kpis" folder, and they are named following this logic: NRUN_SELFRATE_exec_numMotes_NMOTES.dat.kpi
+Results files are stored inside the `custom_plots/kpis` folder, and they are named following this logic: `NRUN_SELFRATE_exec_numMotes_NMOTES.dat.kpi`
 
-* NRUN = the number of the run for the same configuration.
-* SELFRATE = the selfishness rate.
-* NMOTES = the number of nodes used in the simulation.
-* If the file name starts with "R", this means that the reaction mechanism was activated. Otherwise, no reaction mechanism is used.
+* `NRUN` = the number of the run for the same configuration.
+* `SELFRATE` = the selfishness rate.
+* `NMOTES` = the number of nodes used in the simulation.
+* If the file name starts with `R`, this means that the reaction mechanism was activated. Otherwise, no reaction mechanism was used.
 
 ## Installation
 
