@@ -9,7 +9,7 @@ Authors:
 
 ## SelfishnessDetector
 
-This module represents the Fuzzy Selfishness Estimator (FSE). It relies on fuzzy logic theory to compute a value of selfishness for one node.
+This module represents the Fuzzy Selfishness Estimator (FSE). It relies on the fuzzy logic theory to compute a value of selfishness for one node.
 
 ## Detection algorithm
 
@@ -21,7 +21,7 @@ The reaction mechanism is implemented in the file `SimEngine/Mote/sf.py`
 
 ## Choosing selfish nodes
 
-The strategy of choosing which nodes to be configured as selfish ones is implemented in the files `SimEngine/SimEngine.py` and `SimEngine/rpl.py`.
+The strategy of choosing which nodes to be configured as selfish ones is implemented in the files `SimEngine/SimEngine.py` and `SimEngine/Mote/rpl.py`.
 
 ## Results
 
