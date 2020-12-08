@@ -1,6 +1,6 @@
 ## SA-6TiSCH
 
-SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. It includes detection and reaction algorithms for selfish nodes. The selfish behavior itself and the detection algorithm are implemented inside the file sixp.py, while the rection algorithm is impelemnted inside the file sf.py.
+SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. It includes detection and reaction algorithms for selfish nodes. The detection algorithm is implemented inside the file sixp.py, while the selfish behavior itself and the rection algorithm are impelemnted inside the file sf.py.
  
 Authors:
 
@@ -19,6 +19,10 @@ The detection algorithm uses the selfishness module, and is implemented inside t
 
 The reaction mechanism is implemented inside the file "SimEngine/Mote/sf.py"
 
+## Choosing selfish nodes
+
+The strategy of choosing which nodes to be configured as selfish ones is implemented inside the files "SimEngine/SimEngine.py" and "SimEngine/rpl.py".
+
 ## Results
 
 The "custom_plots" folder hosts the results files as well as Python files used to generate our plots and boxes.
@@ -29,56 +33,6 @@ Results files are stored inside the "custom_plots/kpis" folder, and they are nam
 * SELFRATE = the selfishness rate.
 * NMOTES = the number of nodes used in the simulation.
 * If the file name starts with "R", this means that the reaction mechanism was activated. Otherwise, no recation mechanism is used.
-
-
- 
-Core Developers:
-
-* Yasuyuki Tanaka (yasuyuki.tanaka@inria.fr)
-* Keoma Brun-Laguna (keoma.brun@inria.fr)
-* Mališa Vučinić (malisa.vucinic@inria.fr)
-* Thomas Watteyne (thomas.watteyne@inria.fr)
-
-Contributers:
-
-* Kazushi Muraoka (k-muraoka@eecs.berkeley.edu)
-* Nicola Accettura (nicola.accettura@eecs.berkeley.edu)
-* Xavier Vilajosana (xvilajosana@eecs.berkeley.edu)
-* Esteban Municio (esteban.municio@uantwerpen.be)
-* Glenn Daneels (glenn.daneels@uantwerpen.be)
-
-## Publishing
-
-If you publish an academic paper using the results of the 6TiSCH Simulator, please cite:
-
-E. Municio, G. Daneels, M. Vucinic, S. Latre, J. Famaey, Y. Tanaka, K. Brun, K. Muraoka, X. Vilajosana, and T. Watteyne, "Simulating 6TiSCH Networks", Wiley Transactions on Emerging Telecommunications (ETT), 2019; 30:e3494. https://doi.org/10.1002/ett.3494
-
-## Scope
-
-6TiSCH is an IETF standardization working group that defines a complete protocol stack for ultra reliable ultra low-power wireless mesh networks.
-This simulator implements the 6TiSCH protocol stack, exactly as it is standardized.
-It allows you to measure the performance of a 6TiSCH network under different conditions.
-
-Simulated protocol stack
-
-|                                                                                                              |                                             |
-|--------------------------------------------------------------------------------------------------------------|---------------------------------------------|
-| [RFC6550](https://tools.ietf.org/html/rfc6550), [RFC6552](https://tools.ietf.org/html/rfc6552)               | RPL, non-storing mode, OF0                  |
-| [RFC6206](https://tools.ietf.org/html/rfc6206)                                                               | Trickle Algorithm                           |
-| [draft-ietf-6lo-minimal-fragment-07](https://tools.ietf.org/html/draft-ietf-6lo-minimal-fragment-07)         | 6LoWPAN Fragment Forwarding                 |
-| [RFC6282](https://tools.ietf.org/html/rfc6282), [RFC4944](https://tools.ietf.org/html/rfc4944)               | 6LoWPAN Fragmentation                       |
-| [draft-ietf-6tisch-msf-10](https://tools.ietf.org/html/draft-ietf-6tisch-msf-10)                             | 6TiSCH Minimal Scheduling Function (MSF)    |
-| [draft-ietf-6tisch-minimal-security-15](https://tools.ietf.org/html/draft-ietf-6tisch-minimal-security-15)   | Constrained Join Protocol (CoJP) for 6TiSCH |
-| [RFC8480](https://tools.ietf.org/html/rfc8480)                                                               | 6TiSCH 6top Protocol (6P)                   |
-| [RFC8180](https://tools.ietf.org/html/rfc8180)                                                               | Minimal 6TiSCH Configuration                |
-| [IEEE802.15.4-2015](https://ieeexplore.ieee.org/document/7460875/)                                           | IEEE802.15.4 TSCH                           |
-
-* connectivity models
-    * Pister-hack
-    * k7: trace-based connectivity
-* miscellaneous
-    * Energy Consumption model taken from
-        * [A Realistic Energy Consumption Model for TSCH Networks](http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=6627960&url=http%3A%2F%2Fieeexplore.ieee.org%2Fiel7%2F7361%2F4427201%2F06627960.pdf%3Farnumber%3D6627960). Xavier Vilajosana, Qin Wang, Fabien Chraim, Thomas Watteyne, Tengfei Chang, Kris Pister. IEEE Sensors, Vol. 14, No. 2, February 2014.
 
 ## Installation
 
