@@ -27,7 +27,7 @@ The strategy of choosing which nodes to be configured as selfish ones is impleme
 
 The `custom_plots` folder hosts the results files as well as Python files used to generate our plots and boxes.
 
-Results files are stored inside the `custom_plots/kpis` folder, and they are named following this logic: `NRUN_SELFRATE_exec_numMotes_NMOTES.dat.kpi`
+Results files are stored inside the `custom_plots/kpis` folder, and they are named following this logic: `NRUN_SELFRATE_exec_numMotes_NMOTES.dat.kpi` (e.g., `1_040_exec_numMotes_100.dat.kpi`).
 
 * `NRUN` = the number of the run for the same configuration.
 * `SELFRATE` = the selfishness rate.
@@ -46,21 +46,18 @@ While 6TiSCH Simulator has been tested with Python 2.7, it should work with Pyth
 
 1. Download the code:
    ```
-   $ git clone https://bitbucket.org/6tisch/simulator.git
+   $ git clone https://github.com/yboufenneche/SA-6TiSCH.git
    ```
 1. Install the Python dependencies:
    `cd simulator` and `pip install -r requirements.txt`
-1. Execute `runSim.py` or start the GUI:
-    * runSim.py
-       ```
-       $ cd bin
-       $ python runSim.py
-       ```
-        * a new directory having the timestamp value as its name is created under
-          `bin/simData/` (e.g., `bin/simData/20181203-161254-775`)
-        * raw output data and raw charts are stored in the newly created directory
-
-```
+1. Execute `runSim.py` :
+   ```
+   $ cd bin
+   $ python runSim.py
+   ```
+   * a new directory having the timestamp value as its name is created under
+     `bin/simData/` (e.g., `bin/simData/20181203-161254-775`)
+   * raw output data and raw charts are stored in the newly created directory
 
 ## Code Organization
 
