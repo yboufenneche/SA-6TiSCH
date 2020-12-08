@@ -25,7 +25,7 @@ The strategy of choosing which nodes to be configured as selfish ones is impleme
 
 ## Results
 
-The "custom_plots" folder hosts the results files as well as Python files used to generate our plots and boxes.
+The `custom_plots` folder hosts the results files as well as Python files used to generate our plots and boxes.
 
 Results files are stored inside the `custom_plots/kpis` folder, and they are named following this logic: `NRUN_SELFRATE_exec_numMotes_NMOTES.dat.kpi`
 
