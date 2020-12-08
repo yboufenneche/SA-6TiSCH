@@ -9,7 +9,7 @@ Authors:
 
 ## SelfishnessDetector module
 
-The `SelfishnessDetector` module represents the Fuzzy Selfishness Estimator (FSE). It relies on the fuzzy logic theory to compute a value of selfishness for one node.
+The `SelfishnessDetector` module represents the Fuzzy Selfishness Estimator (FSE). It relies on the fuzzy logic theory to compute a `Selfishness` value given a `Pr` value, a `RSR` value and a `Distance` value.
 
 ## Detection algorithm
 
