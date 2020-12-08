@@ -7,17 +7,17 @@ Authors:
 * Laurent George (laurent.george@esiee.fr)
 * Nawel Gharbi (ngharbi@usthb.dz)
 
-SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. We define a selfish node as the one that does not amply cooperate with its neighbors during the negotiation process of the protocol, 6P which enables adding new cells between neighbors. In fact, a selfish node intentionnally disagree to install a number of cells with the neighbor, either to save its energy or to disrupt the network performance.
+SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. We define a selfish node as the one that does not amply cooperate with its neighbors during the negotiation process of the protocol 6P, which enables adding new cells between neighbors. In fact, a selfish node intentionnally disagree to install a number of cells with the neighbor, either to save its energy or to disrupt the network performance.
 
 ## Additional features of SA-6TiSCH compared to 6TiSCH
 
 The purpose of SA-6TiSCH is to consider the selfishness while simulating 6TiSCH networks. For so doing, we extended the 6TiSCH simulator with the following features:
 
-* Selfish Behavior: we define and implement the selfish behavior in 6TiSCH networks, by making nodes not fairly running 6top Protocol. This behavior is implemented the file `SimEngine/Mote/sf.py`.
+* Selfish Behavior: we define and implement the selfish behavior in 6TiSCH networks, by making nodes not fairly running 6top Protocol. This behavior is implemented in the file `SimEngine/Mote/sf.py`.
 
-* Detection Algorithm: is a distributed algorithm based on fuzzy logic theory that enables each node in the network to identify its non-cooperative neighbors. It is implemented in the file `SimEngine/Mote/sixp.py`, and relies on the values provided by `SelfishnessDetector`module.
+* Detection Algorithm: is a distributed algorithm based on fuzzy logic theory that enables each node in the network to identify its non-cooperative neighbors. It is implemented in the file `SimEngine/Mote/sixp.py`, and relies on the values provided by the `Fuzzy Selfishness Estimator`.
     
-    * Fuzzy Selfishness Estimator: it uses the fuzzy logic theory to compute a `Selfishness` value given an `Occupancy probability` value, a `Request Satisfaction Rate (RSR)` value and a `Distance` value. It is implemented in `fuzzySelfishnessEstimator.py`.
+    * Fuzzy Selfishness Estimator: it uses the fuzzy logic theory to compute a `Selfishness` value given an `Occupancy probability` value, a `Request Satisfaction Rate (RSR)` value and a `Distance` value. It is implemented in the file `SelfishnessDetector/fuzzySelfishnessEstimator.py`.
        
 * Reaction Algorithm:  is a countermeasure solution that helps nodes anticipating their reaction in the presence of suspicious nodes. The reaction mechanism is implemented in the file `SimEngine/Mote/sf.py`.
 
@@ -35,31 +35,6 @@ Results files are stored inside the `custom_plots/kpis` subfolder, and they are 
 * `SELFRATE` = the selfishness rate.
 * `NMOTES` = the number of nodes used in the simulation.
 * If the file name starts with `R`, this means that the reaction mechanism was activated. Otherwise, no reaction mechanism was used.
-
-## Installation
-
-* Install Python 2.7 (or Python 3)
-* Clone or download this repository
-* To plot the graphs, you need Matplotlib and scipy. On Windows, Anaconda (http://continuum.io/downloads) is a good one-stop-shop.
-
-While 6TiSCH Simulator has been tested with Python 2.7, it should work with Python 3 as well.
-
-## Getting Started
-
-1. Download the code:
-   ```
-   $ git clone https://github.com/yboufenneche/SA-6TiSCH.git
-   ```
-1. Install the Python dependencies:
-   `cd simulator` and `pip install -r requirements.txt`
-1. Execute `runSim.py` :
-   ```
-   $ cd bin
-   $ python runSim.py
-   ```
-   * a new directory having the timestamp value as its name is created under
-     `bin/simData/` (e.g., `bin/simData/20181203-161254-775`)
-   * raw output data and raw charts are stored in the newly created directory
 
 ## Code Organization
 
