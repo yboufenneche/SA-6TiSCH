@@ -317,11 +317,15 @@ class Tsch(object):
             neighbor,
             link_type
         )
-        slotframe.add(cell)
+        # ***
+        # Added by yassine
+        # ***
+        if slotOffset != -1:
+            slotframe.add(cell)
 
-        # reschedule the next active cell, in case it is now earlier
-        if self.getIsSync():
-            self._schedule_next_active_slot()
+            # reschedule the next active cell, in case it is now earlier
+            if self.getIsSync():
+                self._schedule_next_active_slot()
 
     def deleteCell(self, slotOffset, channelOffset, neighbor, cellOptions, slotframe_handle=0):
         assert isinstance(slotOffset, int)

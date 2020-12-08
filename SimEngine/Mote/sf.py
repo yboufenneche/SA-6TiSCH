@@ -1016,7 +1016,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         # NumCells ?
         num_cells = request[u'app'][u'numCells']
         applicant.sf.numRequestedCells[str(self.mote.id)] = num_cells
-        # print("  >>> Node {0} claimed {1} cells from node {2} ".format(applicantID, applicant.sf.numRequestedCells[str(self.mote.id)], self.mote.id))
+        print("  >>> Node {0} claimed {1} cells from node {2} ".format(applicantID, applicant.sf.numRequestedCells[str(self.mote.id)], self.mote.id))
 
         if len(candidate_cells) < request[u'app'][u'numCells']:
             cell_list = candidate_cells
@@ -1026,7 +1026,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 request[u'app'][u'numCells']
             )
 
-        # print ("## Cell list : " + str(cell_list))
+        #print ("## Cell list : " + str(cell_list))
 
         ################################################################
         # Which motes to be set as selfish ?
@@ -1042,8 +1042,7 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
                 self.mote.isFirstAddRequest[str(applicantID)] = False
             else:
                 self._reduceCells(cell_list, 1)
-                # print ("## Cell list after trying to remove " +
-                # str (1) + " cell(s) : " + str(cell_list))
+                #print ("## Cell list after trying to remove " + str (1) + " cell(s) : " + str(cell_list))
         ################################################################
 
         # prepare callback
@@ -1095,6 +1094,11 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
         def callback(event, packet):
             if event == d.SIXP_CALLBACK_EVENT_PACKET_RECEPTION:
                 assert packet[u'app'][u'msgType'] == d.SIXP_MSG_TYPE_RESPONSE
+                # ***
+                # Added by Yassine
+                # ***
+                #print ("*** Code: {}".format(packet[u'app'][u'code']))
+                # ***
                 if packet[u'app'][u'code'] == d.SIXP_RC_SUCCESS:
                     # add cells on success of the transaction
                     self._add_cells(
@@ -1523,10 +1527,13 @@ class SchedulingFunctionMSF(SchedulingFunctionBase):
     def _reduceCells(self, cell_list, num_cells):
         n = ((num_cells + 1) / 2)
         for i in range(n):
-            if len(cell_list) > 0:
-                cell_list.pop()
-            else:
-                break
+            # if len(cell_list) > 0:
+            cell_list.pop()
+            # else:
+            #     break
+
+        if len(cell_list) == 0:
+            cell_list.extend([{'channelOffset': -1, 'slotOffset': -1}])
 
         return cell_list
 

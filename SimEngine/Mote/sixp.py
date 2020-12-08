@@ -444,7 +444,12 @@ class SixP(object):
                     neighborID = neighbor.id
 
                     _numRequestedCells = applicant.sf.numRequestedCells[str(neighborID)]
-                    _numReceivedCells = len(response[u'app'][u'cellList'])
+                    if (response[u'app'][u'cellList'][0]['slotOffset'] != -1):
+                        _numReceivedCells = len(response[u'app'][u'cellList'])
+                    else:
+                        _numReceivedCells = 0
+
+                    # print ("** Num received cells: {}".format(_numReceivedCells))
                     _numProposedCells = self.mote.sf.numProposedCells[str(neighborID)]
 
                     _numAvailableSlotsApplicant = self.mote.sf.numAvailableSlots
