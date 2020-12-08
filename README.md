@@ -1,13 +1,23 @@
 ## SA-6TiSCH: Selfishness-Aware 6TiSCH
 
-SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. It includes detection and reaction algorithms for selfish nodes. The detection algorithm is implemented in the file `sixp.py`, while the selfish behavior itself and the reaction algorithm are implemented inside the file `sf.py`.
+SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. We define a selfish node as the one that does not amply cooperate with its neighbors during the negotiation process of the protocol, 6P which enables adding new cells between neighbors. In fact, a selfish node intentionnally disagree to install a number of cells with the neighbor, either to save its energy or to disrupt the network performance.
+
+It includes distributed detection and reaction algorithms for selfish nodes. The detection algorithm is implemented in the file `sixp.py`, while the selfish behavior itself and the reaction algorithm are implemented inside the file `sf.py`.
  
 Authors:
 
 * Yassine Boufenneche (yboufenneche@usthb.dz)
 * Rafik Zitouni (rafik.zitouni@ece.fr)
+* Laurent George (laurent.george@esiee.fr)
+* Nawel Gharbi (ngharbi@usthb.dz)
 
-## SelfishnessDetector module
+## Additional features of SA-6TiSCH compared to 6TiSCH
+
+The purpose of SA-6TiSCH is to consider the selfishness while simulating 6TiSCH networks. For so doing, we extended the 6TiSCH simulator with the following features:
+
+
+
+* # SelfishnessDetector module
 
 The `SelfishnessDetector` module represents the Fuzzy Selfishness Estimator (FSE). It relies on the fuzzy logic theory to compute a `Selfishness` value given a `Pr` value, a `RSR` value and a `Distance` value.
 
