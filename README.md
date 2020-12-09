@@ -23,7 +23,7 @@ The purpose of SA-6TiSCH is to consider the selfishness while simulating 6TiSCH 
 
 ## Choosing selfish nodes
 
-The strategy of choosing which nodes to be configured as selfish ones is implemented in the files `SimEngine/SimEngine.py` and `SimEngine/Mote/rpl.py`. We start with the first nodes that have successfully joined the network.
+The strategy of choosing which nodes to be configured as selfish ones for a simulation is implemented in the files `SimEngine/SimEngine.py` and `SimEngine/Mote/rpl.py`. We start with the first nodes that have successfully joined the network.
 
 ## Results
 
@@ -32,19 +32,19 @@ The `custom_plots` folder hosts the results files as well as Python files used t
 Results files are stored inside the `custom_plots/kpis` subfolder, and they are named following this logic: `NRUN_SELFRATE_exec_numMotes_NMOTES.dat.kpi` (e.g., `1_040_exec_numMotes_100.dat.kpi`).
 
 * `NRUN` = the number of the run for the same configuration.
-* `SELFRATE` = the selfishness rate.
+* `SELFRATE` = the selfishness rate. It stands for the the number of configured selfish nodes to the overall number of nodes
 * `NMOTES` = the number of nodes used in the simulation.
 * If the file name starts with `R`, this means that the reaction mechanism was activated. Otherwise, no reaction mechanism was used.
 
 ## Code Organization
 
 * `SelfishnessDetector/`:
-    * `fuzzySelfishnessEstimator.py`: Fuzzy Selfishness Estimator (FSE).
-* `custom_plots/`: the results
-    * `kpis/`: the result files
-    * `custom_plots.py`: generate plolts and boxes.
-    * `extract_data.py`: extract and combine data from different result files.
-    * `utilities.py`: useful functions.
+    * `fuzzySelfishnessEstimator.py`: The Fuzzy Selfishness Estimator (FSE).
+* `custom_plots/`: The results
+    * `kpis/`: The result files
+    * `custom_plots.py`: Generates plolts and boxes.
+    * `extract_data.py`: Extracts and combines data from different result files.
+    * `utilities.py`: Useful functions.
 * `SimEngine/`: the simulator
     * `Connectivity.py`: Simulates wireless connectivity.
     * `SimConfig.py`: The overall configuration of running a simulation campaign.
