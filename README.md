@@ -7,7 +7,7 @@ Authors:
 * Laurent George (laurent.george@esiee.fr)
 * Nawel Gharbi (ngharbi@usthb.dz)
 
-SA-6TiSCH is a modified version of the 6TiSCH simulator. It enables the simulation of 6TiSCH networks with the presence of selfish nodes. We define a selfish node as the one that does not amply cooperate with its neighbors during the negotiation process of the protocol 6P, which enables adding new cells between neighbors. In fact, a selfish node intentionnally disagree to install a number of cells with the neighbor, either to save its energy or to disrupt the network performance.
+SA-6TiSCH is a modified version of the [6TiSCH simulator](https://bitbucket.org/6tisch/simulator/src/master/). It enables the simulation of 6TiSCH networks with the presence of selfish nodes. We define a selfish node as the one that does not amply cooperate with its neighbors during the negotiation process of the protocol 6P, which enables adding new cells between neighbors. In fact, a selfish node intentionnally disagree to install a number of cells with the neighbor, either to save its energy or to disrupt the network performance.
 
 ## Additional features of SA-6TiSCH compared to 6TiSCH
 
